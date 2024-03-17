@@ -56,7 +56,15 @@ export const regisPut = (params)=>{
 export const regisGet = (params)=>{
   return request({
     url:"/getRegisData",
-    method:'GET',
+    method:'POST',
+    params
+  })
+}
+
+export const getRecordInfoByID = (params)=>{
+  return request({
+    url:"/getRecordInfoByID",
+    method:"POST",
     params
   })
 }

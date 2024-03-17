@@ -6,6 +6,7 @@ import router from "./router"
 import store from "./store"
 import Cookies from 'js-cookie';
 import InstUserTableVue from './components/InstUserTable.vue';
+import { gsap } from 'gsap';
 
 
 Vue.use(ElementUI)
@@ -18,6 +19,7 @@ const app = new Vue({
   render: h => h(App),
   router,
   store,
+  gsap,
   created() {
     // 检测账户登录情况
     this.checkIsLogin(Cookies.get('userName'))
@@ -34,7 +36,7 @@ const app = new Vue({
     checkIsLogin(userName) {
       // let url = window.location.href.split('/')
       // console.log(url[url.length - 1]);
-      // 刷新时注册路由 防止刷新时白屏
+      // 刷新时注册路由 防止刷新后白屏
       if (Cookies.get("menu")) {
         let routerData = JSON.parse(Cookies.get("routerData"))
         store.commit("routerAdd/LoginChangeRouter", routerData)
@@ -44,6 +46,7 @@ const app = new Vue({
         this.$store.commit("tableDataGet/getTableData")
         // 更新vuex validData数据
         this.$store.commit("validData/addValid");
+        this.$store.commit("current_login_user/changeCurrentUser",Cookies.get('userName'))
       }
     }
   }

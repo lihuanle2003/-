@@ -171,13 +171,15 @@ export default {
             "loginingUser/pushLoginingUser",
             this.Loginform.username
           );
-          console.log(this.$store.state.loginingUser.loginingUSer);
+          // console.log(this.$store.state.loginingUser.loginingUSer);
           // 将用户对应的路由数据交给vuex进行动态路由加载
           this.$store.commit("routerAdd/LoginChangeRouter", res.data.routerArr);
           this.$store.commit(
             "routerAdd/LoginChangeRouteList",
             res.data.routerArr
           );
+          // 将当前登录的用户存入 vuex
+          this.$store.commit("current_login_user/changeCurrentUser",Loginform.username)
           this.loadStatus = false;
           // 路由跳转
           this.$router.replace({ path: "/home" });

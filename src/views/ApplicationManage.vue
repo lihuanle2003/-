@@ -53,7 +53,7 @@
         </template>
       </el-table-column>
       <!-- 操作 -->
-      <el-table-column v-if="restatus" label="操作" width="180px">
+      <el-table-column v-if="restatus" label="操作" width="150px">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -261,6 +261,9 @@ export default {
       longItemWithWidth: {
         idCardNum: 200,
         phoneNum: 150,
+        uid:50,
+        job:50,
+        sex:50
       },
 
       // 复选框数据

@@ -12,6 +12,7 @@
     "core-js": "^3.8.3",
     "echarts": "^4.9.0",
     "element-ui": "^2.15.14",
+    "gsap": "^3.12.5",
     "js-cookie": "^3.0.5",
     "js-cookies": "^1.0.4",
     "less": "^4.1.3",

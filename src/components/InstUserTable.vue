@@ -54,6 +54,7 @@
             </span>
           </div>
           <div class="button">
+            <!-- 通过按钮 -->
             <el-button
               type="primary"
               @click="success(item.id, item.name)"
@@ -61,10 +62,11 @@
               plain
               >通过</el-button
             >
+            <!-- 驳回按钮 -->
             <el-button
               v-if="btnShow"
               type="danger"
-              @click="noArgee(item.id, item.name)"
+              @click="(dialogFormVisible = true), (currentData = item)"
               icon="el-icon-circle-close"
               plain
               >驳回</el-button
@@ -73,6 +75,36 @@
         </el-card>
       </el-col>
     </el-row>
+
+    <!-- 驳回弹窗 填写备注 操作员 -->
+    <el-dialog
+      title="驳回确认"
+      width="30%"
+      :visible.sync="dialogFormVisible"
+      center
+      :before-close="handleColse"
+    >
+      <!-- 主体内容 -->
+      <el-form
+        ref="form"
+        :model="dia_form"
+        :label-position="formLabelPosition"
+        :rules="diaForm_rules"
+      >
+        <el-form-item label="审核人员">
+          <el-input v-model="dia_form.applic_name" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="备注信息" prop="remark">
+          <el-input v-model="dia_form.remark" type="textarea"></el-input>
+        </el-form-item>
+      </el-form>
+      <!-- 弹窗底部按钮 -->
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="vaildDialogForm()">确 定</el-button>
+      </span>
+    </el-dialog>
+
     <el-pagination
       background
       layout="prev, pager, next"
@@ -87,6 +119,7 @@
 
 <script>
 import { firstInstSuccess, firstInstNoArgee } from "@/apis/submitInst";
+import jsCookie from "js-cookie";
 export default {
   name: "InstUserTable",
   props: ["InstData", "btnShow", "title", "num"],
@@ -101,6 +134,20 @@ export default {
 
       // 加载状态
       loadstatus: true,
+      dialogFormVisible: false,
+      currentData: "",
+      dia_form: {
+        applic_name: jsCookie.get("userName"),
+        remark: "",
+      },
+      formLabelPosition: "top",
+
+      // 弹窗验证规则
+      diaForm_rules: {
+        remark: [
+          { required: true, message: "请填写驳回备注", targger: "blur" },
+        ],
+      },
     };
   },
 
@@ -121,36 +168,61 @@ export default {
     getData() {
       this.sliceDataToShow(0, this.page_size);
     },
+
+    /**
+     * 弹窗关闭前处理业务
+     */
+    handleColse() {
+      // 清空表单内容
+      this.$refs.form.resetFields();
+    },
+    /**
+     * 弹窗表单内容验证函数
+     */
+    vaildDialogForm() {
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.noArgee(this.currentData.id, this.currentData.name);
+          this.dialogFormVisible = false;
+          this.handleColse();
+        } else {
+          this.$message.warning("请完善表单内容");
+        }
+      });
+    },
+
     /**
      * 驳回操作
      */
     noArgee(id, name) {
-      this.$confirm(`是否驳回${name}的${this.title}请求`, "驳回请求", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(async () => {
-          let res = await firstInstNoArgee({ id, status: 4 });
-          if (res.data.code === 200) {
-            this.$store.commit("tableDataGet/getTableData");
-            this.$message({
-              type: "success",
-              message: "驳回成功",
-            });
-          } else if (res.data.code === 605) {
-            this.$message({
-              type: "error",
-              message: "服务器错误",
-            });
-          }
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "取消",
-          });
-        });
+      console.log(id, name);
+      // this.$confirm(`是否驳回${name}的${this.title}请求`, "驳回请求", {
+      //   confirmButtonText: "确定",
+      //   cancelButtonText: "取消",
+      //   type: "warning",
+      // })
+      //   .then(async () => {
+      //     // 调用接口修数据状态为驳回
+      //     let res = await firstInstNoArgee({ id, status: 4 });
+      //     if (res.data.code === 200) {
+      //       this.$store.commit("tableDataGet/getTableData");
+      //       this.$message({
+      //         type: "success",
+      //         message: "驳回成功",
+      //       });
+      //     } else if (res.data.code === 605) {
+      //       this.$message({
+      //         type: "error",
+      //         message: "服务器错误",
+      //       });
+      //     }
+      //   })
+      //   .catch(() => {
+      //     this.$message({
+      //       type: "info",
+      //       message: "取消",
+      //     });
+      //   });
     },
 
     /**
@@ -233,9 +305,13 @@ export default {
   justify-content: space-around;
   align-items: center;
   padding: 15px;
-  .el-button{
+  .el-button {
     padding: 10px 5px;
     box-shadow: 2px 2px 4px rgb(225, 225, 225);
   }
+}
+
+.el-form-item {
+  width: 100%;
 }
 </style>

@@ -185,11 +185,13 @@ export default {
     };
   },
   methods: {
+    // 获取可选权限数据
     async getList() {
       let res = await getLoginUser();
       if (res.status === 200) {
         this.login_user = res.data.data;
         this.$store.state.routerAdd.routeAllComponent = res.data.routesArr;
+        // console.log("请求返回的数据:\n",res.data.routesArr);
       } else {
         this.$message.error("请求失误");
       }

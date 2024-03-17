@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <h4>
-      {{ title ? title : breadMapper[currentComp]}}
+      {{ title ? title : breadMapper[currentComp] }}
     </h4>
     <el-dropdown @command="handleLoginOut">
       <span class="el-dropdown-link">
@@ -34,18 +34,19 @@ export default {
     return {
       title: "",
       userName: "",
-      currentComp:"",
-      breadMapper:{
-        'loan':"贷款申请",
-        'home':"首页展示",
-        "ApplicationManage":"贷款申请处理",
-        "FirstInstance":"一审环节",
-        "SecondInstance":"二审环节",
-        "Finalinstance":"终审环节",
-        "Berejected":"驳回数据",
-        "AllowInst":"最终过审人员",
-        "Limitofauth":"权限管理"
-      }
+      currentComp: "",
+      breadMapper: {
+        loan: "贷款申请",
+        home: "首页展示",
+        ApplicationManage: "贷款申请处理",
+        FirstInstance: "一审环节",
+        SecondInstance: "二审环节",
+        Finalinstance: "终审环节",
+        Berejected: "驳回数据",
+        AllowInst: "最终过审人员",
+        Limitofauth: "权限管理",
+        Applic_record: "申请记录",
+      },
     };
   },
 
@@ -56,8 +57,8 @@ export default {
   created() {},
 
   mounted() {
-    let ua = window.location.href.split('/')
-    this.currentComp = ua[ua.length - 1]
+    let ua = window.location.href.split("/");
+    this.currentComp = ua[ua.length - 1];
     bus.$on("getTitle", (value) => {
       this.title = value;
     });
@@ -79,6 +80,9 @@ export default {
               title: "home",
             },
           ];
+
+          // 改变当前用户
+          this.$store.state.current_login_user.current_username = "";
         }
       } else if (command === "user") {
         this.$router.push(

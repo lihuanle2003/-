@@ -141,8 +141,8 @@
 
 <script>
 import { submitLoanData } from "@/apis/loan";
-import { regisPut,regisGet } from "@/apis/user"
-import jsCookie from 'js-cookie';
+import { regisPut, regisGet } from "@/apis/user";
+import jsCookie from "js-cookie";
 export default {
   name: "",
   props: [""],
@@ -194,11 +194,11 @@ export default {
       },
 
       // regis
-      regis:{
-        registration_record:"",
-        user:jsCookie.get("userName"),
-        submitDate:""
-      }
+      regis: {
+        registration_record: "",
+        user: jsCookie.get("userName"),
+        submitDate: "",
+      },
     };
   },
 
@@ -223,8 +223,13 @@ export default {
           })
             .then(async () => {
               // 数据清洗
-              this.userDataForm.idCardNum = this.userDataForm.idCardNum.replace(/\s*/g,"")
-              this.userDataForm.birth = new Date(this.userDataForm.birth).toLocaleDateString()
+              this.userDataForm.idCardNum = this.userDataForm.idCardNum.replace(
+                /\s*/g,
+                ""
+              );
+              this.userDataForm.birth = new Date(
+                this.userDataForm.birth
+              ).toLocaleDateString();
               // 执行传递表单数据操作
               res = await submitLoanData({
                 userInfo: this.userDataForm,
@@ -239,9 +244,8 @@ export default {
                 this.validAll.userFormValid = false;
 
                 // 执行用户提交记录业务
-                this.regisFun(this.resetAllForm)
+                this.regisFun(this.resetAllForm);
                 // 重置表单
-                
               } else if (res.data.code === 605) {
                 this.$message({
                   type: "error",
@@ -269,7 +273,7 @@ export default {
     // 刷新时重置验证对象状态
     this.validAll.userFormValid = false;
     this.validAll.userFormValid = false;
-    console.log(regisGet({user:""}));
+    console.log();
   },
 
   created() {
@@ -280,8 +284,8 @@ export default {
 
   methods: {
     onSubmit() {
-      this.validAll.userFormValid = false
-      this.validAll.userWorkValid = false
+      this.validAll.userFormValid = false;
+      this.validAll.userWorkValid = false;
       // userForm 表单验证 改变validAll 触发watch监听 执行提交请求操作
       this.$refs["userForm"].validate((valid) => {
         if (valid) {
@@ -302,7 +306,7 @@ export default {
         }
       });
 
-      console.log(this.validAll);
+      // console.log(this.validAll);
     },
 
     // 重置表单
@@ -312,19 +316,15 @@ export default {
     },
 
     // 用户申请记录入库
-    async regisFun(callback){
-      let temp = []
-      temp.push(JSON.stringify(this.userDataForm))
-      temp.push(JSON.stringify(this.userWorkData))
-      this.regis.registration_record = temp
-      this.regis.submitDate = new Date().toLocaleString()
-      const res = await regisPut(this.regis)
-      if(res.data.code === 200){
+    async regisFun(callback) {
+      // 组装临时对象  使用唯一值 身份证号作为外键
+      this.regis.registration_record = this.userDataForm.idCardNum;
+      this.regis.submitDate = new Date().toLocaleString();
 
-      }
+      await regisPut(this.regis);
 
       this.resetAllForm();
-    }
+    },
   },
 };
 </script>

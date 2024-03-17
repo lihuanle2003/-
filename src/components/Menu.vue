@@ -3,7 +3,7 @@
     <el-menu default-active="2" class="el-menu-vertical-demo">
       <h3 class="headerTitle">审核系统</h3>
       <template v-for="(item, index) in routerList">
-        <el-menu-item v-if="showLoan(item.component)" :key="index" @click="handleClickChangPAge(item)">
+        <el-menu-item v-if="isShow(item.component)" :key="index" @click="handleClickChangPAge(item)">
           <i :class="`el-icon-${item.icon}`"></i>
           <span slot="title">{{ item.name }}</span>
         </el-menu-item>
@@ -44,8 +44,9 @@ export default {
       );
       bus.$emit("getTitle", item.name);
     },
-    showLoan(component){
-      if(component === 'Loan' && jsCookie.get('userName') === 'admin'){
+    isShow(component){
+      // console.log(component);
+      if((component === 'Loan' || component === 'Applic_record/Applic_record') && jsCookie.get('userName') === 'admin'){
         return false
       }else{
         return true

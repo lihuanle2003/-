@@ -9,6 +9,7 @@ import validData from "./tableDataToValid"
 import examine from "./examine"
 import tableDataGet from "./tableDataGet"
 import loginingUser from './loginUser'
+import current_login_user from "./current_login_user"
 
 const store = new Vuex.Store({
     modules:{
@@ -17,7 +18,8 @@ const store = new Vuex.Store({
         validData,
         examine,
         tableDataGet,
-        loginingUser
+        loginingUser,
+        current_login_user
     }
 })
 
