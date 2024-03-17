@@ -1,10 +1,10 @@
 <template>
   <InstUserTable
-    :reGetTableData="reGetTableData"
     :InstData="disAllowInst"
     :num="0"
     :btnShow="false"
     title=""
+    ref="InstBereject"
   />
 </template>
   
@@ -23,7 +23,9 @@ export default {
     InstUserTable,
   },
 
-  computed: {},
+  watch: {
+    
+  },
 
   created() {},
 
@@ -32,11 +34,6 @@ export default {
   },
 
   methods: {
-    // 重新获取数据
-    reGetTableData() {
-      this.$store.commit("tableDataGet/getTableData");
-      this.disAllowInst = this.$store.state.tableDataGet.disAllowInst;
-    },
   },
 };
 </script>

@@ -1,10 +1,10 @@
 <template>
   <InstUserTable
     :InstData="fallinyInstData"
-    :reGetTableData="reGetTableData"
     :num="3"
     :btnShow="true"
     title="终审"
+    ref="InstFinall"
   />
 </template>
 
@@ -23,19 +23,15 @@ export default {
     InstUserTable,
   },
 
-  computed: {},
-
-  created() {},
+  watch: {
+    
+  },
 
   mounted() {
     this.fallinyInstData = this.$store.state.tableDataGet.fallinyInstData;
   },
 
   methods: {
-    reGetTableData() {
-      this.$store.commit("tableDataGet/getTableData");
-      this.fallinyInstData = this.$store.state.tableDataGet.fallinyInstData;
-    },
   },
 };
 </script>

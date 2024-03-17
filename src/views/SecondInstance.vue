@@ -4,7 +4,7 @@
     :num="2"
     :btn-show="true"
     title="二审"
-    ref="Inst"
+    ref="InstSecond"
   />
 </template>
 
@@ -29,17 +29,10 @@ export default {
 
   mounted() {
     this.scendInstData = this.$store.state.tableDataGet.scendInstData;
-    this.$refs.Inst.$on("reGetTableData",()=>{
-      this.reGetTableData()
-    })
   },
 
   methods: {
-    reGetTableData() {
-      console.log("更新vuex");
-      this.$store.commit("tableDataGet/getTableData");
-      this.scendInstData = this.$store.state.tableDataGet.scendInstData;
-    },
+    
   },
 };
 </script>

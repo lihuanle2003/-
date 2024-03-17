@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-empty
-      v-if="InstData.length === 0 ? true : false"
+      v-if="InstDataComputed.length === 0 ? true : false"
       description="暂无数据"
     ></el-empty>
     <el-card
@@ -112,7 +112,7 @@
       background
       layout="prev, pager, next"
       :page-size="page_size"
-      :total="InstData.length"
+      :total="InstDataComputed.length"
       :current-page="currentPage"
       @current-change="handleChangePage"
     >
@@ -129,8 +129,7 @@ export default {
   data() {
     return {
       page_size: 6,
-      currentPage: 1,
-      searchTableData: [],
+      currentPage: 0,
 
       // 展示数据
       dataToShow: [],
@@ -144,7 +143,6 @@ export default {
         remark: "",
       },
       formLabelPosition: "top",
-
       // 弹窗验证规则
       diaForm_rules: {
         remark: [
@@ -156,11 +154,20 @@ export default {
 
   components: {},
 
+  // 使用计算属性 缓存页面数据
+  computed: {
+    InstDataComputed(){
+      return this.InstData
+    }
+  },
   watch: {
-    InstData:{
+    dataToShow:{
       deep:true,
-      handler(){
-        this.sliceDataToShow(0,this.page_size);
+      handler(newVal,oldVal){
+        // 非第一页展示数据操作完 向前跳跃一个页面
+        if(!newVal.length && this.currentPage !=0){
+          this.handleChangePage(this.currentPage - 1)
+        }
       }
     }
   },
@@ -213,7 +220,6 @@ export default {
         sex: item.sex,
         status: 4,
       };
-      console.log(requestObj);
       this.$confirm(`是否驳回${item.name}的${this.title}请求`, "驳回请求", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -223,7 +229,7 @@ export default {
           // 调用接口修数据状态为驳回
           let res = await firstInstNoArgee(requestObj);
           if (res.data.code === 200) {
-            this.$emit("reGetTableData")
+            this.resPageBy$Delete(item.id)
             this.$message({
               type: "success",
               message: res.data.message,
@@ -247,7 +253,6 @@ export default {
      * 同意操作
      */
     success(item) {
-      console.log(item);
       this.$confirm(`是否通过${item.name}的${this.title}请求`, "通过请求", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -257,11 +262,11 @@ export default {
           let res = await firstInstSuccess({
             id: item.id,
             status: this.num,
-            idCardNum:item.idCardNum,
-            sex:item.sex
+            idCardNum: item.idCardNum,
+            sex: item.sex,
           });
           if (res.data.code === 200) {
-            this.$emit("reGetTableData")
+            this.resPageBy$Delete(item.id);
             this.$message({
               type: "success",
               message: "审核通过",
@@ -284,6 +289,7 @@ export default {
 
     // 分页函数
     handleChangePage(page) {
+      this.currentPage = page;
       if (page > 0) {
         let str = -this.page_size + this.page_size * page;
         let end = 0 + this.page_size * page;
@@ -296,6 +302,16 @@ export default {
     sliceDataToShow(str, end) {
       this.dataToShow = this.InstData.slice(str, end);
       this.loadstatus = false;
+    },
+
+    /**
+     * 通过 或者 驳回操作后 使用$delete修改数组数据 响应到页面
+     */
+    resPageBy$Delete(id) {
+      let index = this.InstData.findIndex((item) => item.id === id);
+      if (index != -1) this.$delete(this.InstData, index);
+      // 删除数据后，重新根据currentPage划分页面
+      this.handleChangePage(this.currentPage);
     },
   },
 };

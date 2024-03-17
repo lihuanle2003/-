@@ -1,10 +1,10 @@
 <template>
   <InstUserTable
-    :reGetTableData="reGetTableData"
     :InstData="firstInstData"
     :num="1"
     :btn-show="true"
     title="一审"
+    ref="InstFirst"
   />
 </template>
 
@@ -33,12 +33,6 @@ export default {
   },
 
   methods: {
-    reGetTableData() {
-      console.log("更新vuex");
-      this.$store.commit("tableDataGet/getTableData");
-      this.firstInstData = []
-      this.firstInstData = this.$store.state.tableDataGet.firstInstData;
-    },
   },
 };
 </script>
