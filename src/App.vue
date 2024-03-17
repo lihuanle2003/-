@@ -23,6 +23,23 @@ export default {
 </script>
 
 <style lang="less">
+.el-main{
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: rgba(40, 136, 233, 0.5);
+  }
+  ::-webkit-scrollbar-track {
+    background: rgb(255, 255, 255);
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 125, 251, 0.8);
+  }
+}
 .el-table .cell {
   text-align: center;
 }

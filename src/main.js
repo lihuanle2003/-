@@ -6,8 +6,6 @@ import router from "./router"
 import store from "./store"
 import Cookies from 'js-cookie';
 import InstUserTableVue from './components/InstUserTable.vue';
-import { gsap } from 'gsap';
-
 
 Vue.use(ElementUI)
 // 关闭生产提示
@@ -19,7 +17,6 @@ const app = new Vue({
   render: h => h(App),
   router,
   store,
-  gsap,
   created() {
     // 检测账户登录情况
     this.checkIsLogin(Cookies.get('userName'))

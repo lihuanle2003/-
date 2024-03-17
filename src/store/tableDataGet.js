@@ -43,19 +43,7 @@ export default {
                             break;
                         case '4':
                             state.disAllowInst.push(item)
-
                     }
-                    // if (status === '0') {
-                    //     state.firstInstData.push(item)
-                    // } else if (status === '1') {
-                    //     state.scendInstData.push(item)
-                    // } else if (status === '2') {
-                    //     state.fallinyInstData.push(item)
-                    // } else if (status === '3') {
-                    //     state.allowInst.push(item)
-                    // } else if (status === '4') {
-                    //     state.disAllowInst.push(item)
-                    // }
                 })
             }
         },

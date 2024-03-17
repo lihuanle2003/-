@@ -195,9 +195,10 @@ export default {
 
       // regis
       regis: {
-        registration_record: "",
-        user: jsCookie.get("userName"),
+        idCardNum: "",
+        current_username: jsCookie.get("userName"),
         submitDate: "",
+        sex:"",
       },
     };
   },
@@ -318,11 +319,11 @@ export default {
     // 用户申请记录入库
     async regisFun(callback) {
       // 组装临时对象  使用唯一值 身份证号作为外键
-      this.regis.registration_record = this.userDataForm.idCardNum;
+      this.regis.idCardNum = this.userDataForm.idCardNum;
       this.regis.submitDate = new Date().toLocaleString();
+      this.regis.sex = this.userDataForm.sex
 
       await regisPut(this.regis);
-
       this.resetAllForm();
     },
   },

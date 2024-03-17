@@ -1,5 +1,11 @@
 <template>
-  <InstUserTable :InstData="disAllowInst" :num="0" :btnShow="false" title=""/>
+  <InstUserTable
+    :reGetTableData="reGetTableData"
+    :InstData="disAllowInst"
+    :num="0"
+    :btnShow="false"
+    title=""
+  />
 </template>
   
   <script>
@@ -25,7 +31,13 @@ export default {
     this.disAllowInst = this.$store.state.tableDataGet.disAllowInst;
   },
 
-  methods: {},
+  methods: {
+    // 重新获取数据
+    reGetTableData() {
+      this.$store.commit("tableDataGet/getTableData");
+      this.disAllowInst = this.$store.state.tableDataGet.disAllowInst;
+    },
+  },
 };
 </script>
   <style lang="less">

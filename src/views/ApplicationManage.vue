@@ -261,9 +261,9 @@ export default {
       longItemWithWidth: {
         idCardNum: 200,
         phoneNum: 150,
-        uid:50,
-        job:50,
-        sex:50
+        uid: 50,
+        job: 50,
+        sex: 50,
       },
 
       // 复选框数据
@@ -457,8 +457,8 @@ export default {
         });
         resolved(this.searcTableData);
       }).then((value) => {
-        if(!value.length){
-          this.$message.warning("没有找到对应数据")
+        if (!value.length) {
+          this.$message.warning("没有找到对应数据");
         }
         this.searcTDToshow = this.searcTableData.slice(0, this.page_size);
       });
@@ -702,7 +702,7 @@ export default {
   },
 };
 </script>
-<style lang="less" scoped>
+<style lang="less">
 .el-form {
   display: flex;
   flex-wrap: wrap;

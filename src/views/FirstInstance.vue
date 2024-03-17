@@ -1,5 +1,11 @@
 <template>
-  <InstUserTable :InstData="firstInstData" :num="1" :btn-show="true" title="一审"/>
+  <InstUserTable
+    :reGetTableData="reGetTableData"
+    :InstData="firstInstData"
+    :num="1"
+    :btn-show="true"
+    title="一审"
+  />
 </template>
 
 <script>
@@ -26,7 +32,14 @@ export default {
     this.firstInstData = this.$store.state.tableDataGet.firstInstData;
   },
 
-  methods: {},
+  methods: {
+    reGetTableData() {
+      console.log("更新vuex");
+      this.$store.commit("tableDataGet/getTableData");
+      this.firstInstData = []
+      this.firstInstData = this.$store.state.tableDataGet.firstInstData;
+    },
+  },
 };
 </script>
 <style lang="less">

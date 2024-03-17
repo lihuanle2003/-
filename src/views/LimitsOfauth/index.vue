@@ -154,7 +154,7 @@ export default {
   data() {
     return {
       login_user: "",
-      
+
       showEdit: false,
 
       // 更改的limit
@@ -223,7 +223,7 @@ export default {
     // delete
     handleDelete(e) {
       // 阻止事件冒泡
-      e.stopPropagation()
+      e.stopPropagation();
       console.log("删除用户");
     },
 
@@ -303,7 +303,7 @@ export default {
         });
         let isSame = true;
         if (this.beforeLimit !== this.editLimit) {
-          isSame = false
+          isSame = false;
         }
         if (routesName1.length === routesName2.length) {
           routesName1.forEach((item) => {
@@ -404,12 +404,33 @@ export default {
     this.getList();
   },
   computed: {
-    ...mapState("routerAdd", ["routeAllComponent", "routerList","limitMapper"]),
+    ...mapState("routerAdd", [
+      "routeAllComponent",
+      "routerList",
+      "limitMapper",
+    ]),
   },
   watch: {},
 };
 </script>
 <style scoped lang="less">
+.tal {
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: rgba(40, 136, 233, 0.5);
+  }
+  ::-webkit-scrollbar-track {
+    background: rgb(255, 255, 255);
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 125, 251, 0.8);
+  }
+}
+
 .tal {
   width: 100%;
   height: 100%;
@@ -561,13 +582,17 @@ export default {
         }
         .submitBtn {
           width: 100%;
-          padding: 10px;
           display: flex;
           align-items: center;
           justify-content: space-evenly;
-
           .el-button {
             width: 40%;
+            color: white;
+            background-color: rgba(40, 136, 233, 0.5);
+            transition: all 0.5s;
+            &:hover {
+              background-color: rgba(0, 125, 251, 0.8);
+            }
           }
         }
       }

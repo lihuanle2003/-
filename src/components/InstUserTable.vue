@@ -1,13 +1,15 @@
 <template>
   <div>
-    <el-card> </el-card>
     <el-empty
       v-if="InstData.length === 0 ? true : false"
       description="暂无数据"
     ></el-empty>
     <el-card
       v-if="dataToShow.length > 0 ? true : false"
-      style="margin-bottom: 10px"
+      style="
+        margin-bottom: 20px;
+        border-bottom: 3px solid rgba(100, 100, 100.8);
+      "
     >
       <div class="userInfo">
         <span class="el-icon-s-custom">
@@ -22,9 +24,10 @@
         <span> 身份证号 </span>
       </div>
       <div class="button">
-        <span>操作</span>
+        <span>操 作</span>
       </div>
     </el-card>
+
     <el-row
       v-for="(item, index) in dataToShow"
       :key="index"
@@ -57,7 +60,7 @@
             <!-- 通过按钮 -->
             <el-button
               type="primary"
-              @click="success(item.id, item.name)"
+              @click="success(item)"
               icon="el-icon-check"
               plain
               >通过</el-button
@@ -153,7 +156,14 @@ export default {
 
   components: {},
 
-  computed: {},
+  watch: {
+    InstData:{
+      deep:true,
+      handler(){
+        this.sliceDataToShow(0,this.page_size);
+      }
+    }
+  },
 
   created() {},
 
@@ -182,7 +192,7 @@ export default {
     vaildDialogForm() {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          this.noArgee(this.currentData.id, this.currentData.name);
+          this.noArgee(this.currentData);
           this.dialogFormVisible = false;
           this.handleColse();
         } else {
@@ -194,50 +204,64 @@ export default {
     /**
      * 驳回操作
      */
-    noArgee(id, name) {
-      console.log(id, name);
-      // this.$confirm(`是否驳回${name}的${this.title}请求`, "驳回请求", {
-      //   confirmButtonText: "确定",
-      //   cancelButtonText: "取消",
-      //   type: "warning",
-      // })
-      //   .then(async () => {
-      //     // 调用接口修数据状态为驳回
-      //     let res = await firstInstNoArgee({ id, status: 4 });
-      //     if (res.data.code === 200) {
-      //       this.$store.commit("tableDataGet/getTableData");
-      //       this.$message({
-      //         type: "success",
-      //         message: "驳回成功",
-      //       });
-      //     } else if (res.data.code === 605) {
-      //       this.$message({
-      //         type: "error",
-      //         message: "服务器错误",
-      //       });
-      //     }
-      //   })
-      //   .catch(() => {
-      //     this.$message({
-      //       type: "info",
-      //       message: "取消",
-      //     });
-      //   });
-    },
-
-    /**
-     * 同意操作
-     */
-    success(id, name) {
-      this.$confirm(`是否通过${name}的${this.title}请求`, "通过请求", {
+    noArgee(item) {
+      // 组装请求对象
+      const requestObj = {
+        id: item.id,
+        idCardNum: item.idCardNum,
+        message: this.dia_form.remark,
+        sex: item.sex,
+        status: 4,
+      };
+      console.log(requestObj);
+      this.$confirm(`是否驳回${item.name}的${this.title}请求`, "驳回请求", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       })
         .then(async () => {
-          let res = await firstInstSuccess({ id, status: this.num });
+          // 调用接口修数据状态为驳回
+          let res = await firstInstNoArgee(requestObj);
           if (res.data.code === 200) {
-            this.$store.commit("tableDataGet/getTableData");
+            this.$emit("reGetTableData")
+            this.$message({
+              type: "success",
+              message: res.data.message,
+            });
+          } else if (res.data.code === 605) {
+            this.$message({
+              type: "error",
+              message: "服务器错误",
+            });
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消",
+          });
+        });
+    },
+
+    /**
+     * 同意操作
+     */
+    success(item) {
+      console.log(item);
+      this.$confirm(`是否通过${item.name}的${this.title}请求`, "通过请求", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          let res = await firstInstSuccess({
+            id: item.id,
+            status: this.num,
+            idCardNum:item.idCardNum,
+            sex:item.sex
+          });
+          if (res.data.code === 200) {
+            this.$emit("reGetTableData")
             this.$message({
               type: "success",
               message: "审核通过",
@@ -249,7 +273,8 @@ export default {
             });
           }
         })
-        .catch(() => {
+        .catch((e) => {
+          console.log(e);
           this.$message({
             type: "info",
             message: "取消",
@@ -275,16 +300,20 @@ export default {
   },
 };
 </script>
-<style lang="less" scoped>
+<style lang="less">
 .el-card__body {
   padding: 0;
   width: 100%;
   display: flex;
   justify-content: space-between;
 }
-.el-card__body:nth-child(n + 1) {
-  flex: 1;
+.userInfo {
+  background-color: rgba(118, 129, 153, 0.8);
 }
+.useraddr {
+  background-color: rgba(181, 200, 209, 0.8);
+}
+
 .userInfo,
 .useraddr {
   flex: 1;
@@ -294,7 +323,6 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 15px;
-  margin-right: 20px;
   border-right: 1px solid gray;
 }
 
@@ -305,9 +333,10 @@ export default {
   justify-content: space-around;
   align-items: center;
   padding: 15px;
+  background-color: rgba(240, 253, 255, 0.8);
   .el-button {
     padding: 10px 5px;
-    box-shadow: 2px 2px 4px rgb(225, 225, 225);
+    font-size: 1rem;
   }
 }
 

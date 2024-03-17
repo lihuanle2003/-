@@ -1,5 +1,11 @@
 <template>
-  <InstUserTable :InstData="fallinyInstData" :num="3" :btnShow="true" title="终审"/>
+  <InstUserTable
+    :InstData="fallinyInstData"
+    :reGetTableData="reGetTableData"
+    :num="3"
+    :btnShow="true"
+    title="终审"
+  />
 </template>
 
 <script>
@@ -14,11 +20,10 @@ export default {
   },
 
   components: {
-    InstUserTable
+    InstUserTable,
   },
 
-  computed: {
-  },
+  computed: {},
 
   created() {},
 
@@ -26,7 +31,12 @@ export default {
     this.fallinyInstData = this.$store.state.tableDataGet.fallinyInstData;
   },
 
-  methods: {},
+  methods: {
+    reGetTableData() {
+      this.$store.commit("tableDataGet/getTableData");
+      this.fallinyInstData = this.$store.state.tableDataGet.fallinyInstData;
+    },
+  },
 };
 </script>
 <style lang="less">

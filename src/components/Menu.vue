@@ -1,9 +1,14 @@
 <template>
   <div class="menu" style="height: 100%">
-    <el-menu default-active="2" class="el-menu-vertical-demo">
+    <el-menu :default-active="activeIndex" class="el-menu-vertical-demo">
       <h3 class="headerTitle">审核系统</h3>
       <template v-for="(item, index) in routerList">
-        <el-menu-item v-if="isShow(item.component)" :key="index" @click="handleClickChangPAge(item)">
+        <el-menu-item
+          :index="String(index)"
+          v-if="isShow(item.component)"
+          :key="index"
+          @click="handleClickChangPAge(item)"
+        >
           <i :class="`el-icon-${item.icon}`"></i>
           <span slot="title">{{ item.name }}</span>
         </el-menu-item>
@@ -20,7 +25,9 @@ export default {
   name: "",
   props: [""],
   data() {
-    return {};
+    return {
+      activeIndex: "0",
+    };
   },
 
   components: {},
@@ -44,14 +51,17 @@ export default {
       );
       bus.$emit("getTitle", item.name);
     },
-    isShow(component){
+    isShow(component) {
       // console.log(component);
-      if((component === 'Loan' || component === 'Applic_record/Applic_record') && jsCookie.get('userName') === 'admin'){
-        return false
-      }else{
-        return true
+      if (
+        (component === "Loan" || component === "Applic_record/Applic_record") &&
+        jsCookie.get("userName") === "admin"
+      ) {
+        return false;
+      } else {
+        return true;
       }
-    }
+    },
   },
 };
 </script>
@@ -59,7 +69,6 @@ export default {
 .menu {
   display: flex;
   flex-flow: column;
-
   .el-menu {
     flex: 1;
     .headerTitle {
@@ -70,6 +79,7 @@ export default {
     }
     .el-menu-item {
       display: flex;
+      font-size: 1rem;
       align-items: center;
       padding: 5px;
       user-select: none;
